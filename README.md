@@ -7,7 +7,7 @@
 
 Our paper introduces **TabCascade**, a cascaded flow matching model for high-fidelity tabular data generation. On average, TabCascade improves the detection score by over 50% compared to the baselines. If needed, TabCascade is able to generate realistic missing values in numerical features.
 
-![Banner](https://github.com/muellermarkus/tabcascade/blob/main/figures/overview.png)
+![Banner](https://github.com/muellermarkus/tabcascade/blob/master/figures/overview.png)
 
 ## Abstract
 
@@ -49,11 +49,11 @@ Note that for the largest datasets (airlines and diabetes), detection score eval
 
 To encode $\mathbf{x}_{\text{num}}$ into $\mathbf{z}$, we utilize a distributional regression tree (DT). We train a separate DT for each feature, which partitions the feature's support and estimates a separate Gaussian distribution in each partition. Unlike a Gaussian Mixture model (GMM), the DT directly optimizes for a hard clustering given by the boundaries of the partitions. This reduces the overlap between Gaussian components and provably lowers the transport cost bound. Below, we illustrate the Gaussian components found by the DT encoder (with max depth = 3) for two features in the adult dataset. The red vertical lines represent the component-wise means.
 
-![DTEncoder](https://github.com/muellermarkus/tabcascade/blob/main/figures/dt_groups.png)
+![DTEncoder](https://github.com/muellermarkus/tabcascade/blob/master/figures/dt_groups.png)
 
 
 ## Provably lower transport cost bound
 
 In the high-resolution model, our data-dependent coupling based on the DT encoder leads to a provably lower transport cost bound. As illustrated below, the source distribution is already very close to the data distribution.
 
-![TransportCosts](https://github.com/muellermarkus/tabcascade/blob/main/figures/prob_paths.png)
+![TransportCosts](https://github.com/muellermarkus/tabcascade/blob/master/figures/prob_paths.png)
