@@ -1,0 +1,6 @@
+csv_file: 'online_shoppers_intention.csv'
+task: 'bin_class'
+target: 'Revenue'
+cat_features: ['Month', 'OperatingSystems', 'Browser', 'Region', 'TrafficType', 'VisitorType', 'Weekend']
+cont_features: ['Administrative_Duration', 'Informational_Duration', 'ProductRelated_Duration', 'BounceRates', 'ExitRates', 'PageValues', 'SpecialDay']
+int_features: ['Administrative', 'Informational', 'ProductRelated']

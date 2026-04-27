@@ -1,0 +1,6 @@
+csv_file: 'electricity.csv'
+task: 'bin_class'
+target: 'class'
+cat_features: ['day']
+cont_features: ['date', 'period', 'nswprice', 'nswdemand', 'vicprice', 'vicdemand', 'transfer']
+int_features: []

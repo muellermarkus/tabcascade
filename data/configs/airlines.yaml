@@ -1,0 +1,6 @@
+csv_file: 'airlines.csv'
+task: 'bin_class'
+target: 'Delay'
+cat_features: ['Airline', 'AirportFrom', 'AirportTo', 'DayOfWeek']
+cont_features: []
+int_features: ['Flight', 'Time', 'Length']

@@ -1,0 +1,6 @@
+csv_file: 'kc1.csv'
+task: 'bin_class'
+target: 'defects'
+cat_features: []
+cont_features: ['loc', 'v(g)', 'ev(g)', 'iv(g)', 'n', 'v', 'l', 'd', 'i', 'e', 'b', 't', 'uniq_Op', 'uniq_Opnd', 'total_Op', 'total_Opnd', 'branchCount']
+int_features: ['lOCode', 'lOComment', 'lOBlank', 'locCodeAndComment']

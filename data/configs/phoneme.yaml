@@ -1,0 +1,6 @@
+csv_file: 'phoneme.csv'
+task: 'bin_class'
+target: 'Class'
+cat_features: []
+cont_features: ['V1', 'V2', 'V3', 'V4', 'V5']
+int_features: []
