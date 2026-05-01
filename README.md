@@ -57,3 +57,16 @@ To encode $\mathbf{x}_{\text{num}}$ into $\mathbf{z}$, we utilize a distribution
 In the high-resolution model, our data-dependent coupling based on the DT encoder leads to a provably lower transport cost bound. As illustrated below, the source distribution is already very close to the data distribution.
 
 ![TransportCosts](https://github.com/muellermarkus/tabcascade/blob/master/figures/prob_paths.png)
+
+
+## Citation
+
+```
+@inproceedings{mueller2026tabcascade,
+  title = {Cascaded {{Flow Matching}} for {{Heterogeneous Tabular Data}} with {{Mixed-Type Features}}},
+  booktitle = {International {{Conference}} on {{Machine Learning}}},
+  author = {Mueller, Markus and Gruber, Kathrin and Fok, Dennis},
+  year = 2026,
+  url = {https://arxiv.org/abs/2601.22816}
+}
+```
