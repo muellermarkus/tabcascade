@@ -66,7 +66,7 @@ In the high-resolution model, our data-dependent coupling based on the DT encode
   title = {Cascaded {{Flow Matching}} for {{Heterogeneous Tabular Data}} with {{Mixed-Type Features}}},
   booktitle = {International {{Conference}} on {{Machine Learning}}},
   author = {Mueller, Markus and Gruber, Kathrin and Fok, Dennis},
-  year = 2026,
+  year = {2026},
   url = {https://arxiv.org/abs/2601.22816}
 }
 ```
