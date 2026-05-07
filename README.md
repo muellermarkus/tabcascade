@@ -21,9 +21,9 @@ Our environment depends on `rpy2`, hence we require `R` to be installed on the s
 
 ### Installing disttree
 
-Our encoding of \(\mathbf{x}_{\text{num}}\) into \(\mathbf{z}\)requires the disttree R package for distributional regressiona trees.
+Our encoding of \(\mathbf{x}\_{\text{num}}\) into \(\mathbf{z}\)requires the disttree R package for distributional regressiona trees.
 With `rpy2` installed, simply `uv run disttree/model.py` to install the necessary packages. Note that the installation of `rpy2` requires `R` to be installed on your system. Note that for some systems custom steps may be needed dependent on your R installation and its interaction with `rpy2`.
-If installation completes successfully, a matrix of groups retrieved for some simulated \(\mathbf{x}_{\text{num}}\) should be displayed to confirm that disttree works as intended.
+If installation completes successfully, a matrix of groups retrieved for some simulated \(\mathbf{x}\_{\text{num}}\) should be displayed to confirm that disttree works as intended.
 
 ## Datasets
 
