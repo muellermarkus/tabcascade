@@ -16,13 +16,20 @@ However, generating mixed-type features that combine discrete states with an oth
 We advance the state-of-the-art in diffusion models for tabular data with a cascaded approach. We first generate a low-resolution version of a tabular data row, that is, the collection of the purely categorical features and a coarse categorical representation of numerical features. Next, this information is leveraged in the high-resolution flow matching model via a novel guided conditional probability path and data-dependent coupling. The low-resolution representation of numerical features explicitly accounts for discrete outcomes, such as missing or inflated values, and therewith enables a more faithful generation of mixed-type features.
 We formally prove that this cascade tightens the transport cost bound. The results indicate that our model generates significantly more realistic samples and captures distributional details more accurately, for example, the detection score improves by 51.9\%.
 
+## Update: Python implementation of DT encoder
+
+We ported the disttree R code to Python to avoid the dependence on `rpy2` and outdated R packages. We confirmed that the Python implementation induces almost exactly the same discretization. This implementation is now the default. To use the original R-based encoder, see the instructions below.
+
+
 ## Install instructions
-Our environment depends on `rpy2`, hence we require `R` to be installed on the system. Otherwise `uv sync` will fail. Make sure uv is installed and run `uv sync`.
 
-### Installing disttree
+Make sure uv is installed and run `uv sync`.
 
-Our encoding of $\mathbf{x}\_{\text{num}}$ into $\mathbf{z}$ requires the disttree R package for distributional regressiona trees.
-With `rpy2` installed, simply `uv run disttree/model.py` to install the necessary packages. Note that the installation of `rpy2` requires `R` to be installed on your system. Note that for some systems custom steps may be needed dependent on your R installation and its interaction with `rpy2`.
+
+### Installing and using the original R-based disttree
+
+The experiments in the paper were conducted using the R-based DT encoder. This code is available in `disttree_R` and can be used by setting `use_R_version=True` for the discretizer in `tabcascade.py`. Most importantly, this requires `rpy2` (and R) to be installed. To install the necessary R packages, run `uv run disttree/model.py`. Note that for some systems custom steps may be needed dependent on your R installation and its interaction with `rpy2`.
+
 If installation completes successfully, a matrix of groups retrieved for some simulated $\mathbf{x}\_{\text{num}}$ should be displayed to confirm that disttree works as intended.
 
 ## Datasets

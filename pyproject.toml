@@ -15,7 +15,6 @@ dependencies = [
     "pandas[parquet]>=3.0.2",
     "pathlib>=1.0.1",
     "polars>=1.40.0",
-    "rpy2>=3.6.7",
     "scikit-learn>=1.8.0",
     "scipy>=1.17.1",
     "sdmetrics>=0.25.0",

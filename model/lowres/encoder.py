@@ -4,7 +4,8 @@ import torch
 from sklearn.mixture import BayesianGaussianMixture
 from sklearn.preprocessing import OrdinalEncoder
 
-from disttree import DistTree
+from disttree_python import DistTree as DistTreePy
+from disttree_R import DistTree
 
 
 class Discretizer:
@@ -16,7 +17,17 @@ class Discretizer:
     - GMM based (gmm)
     """
 
-    def __init__(self, X_num_trn, variant="dt", k_max=20, perc_obs=0.03, seed=42, adjust_means=False, max_depth=3):
+    def __init__(
+        self,
+        X_num_trn,
+        variant="dt",
+        k_max=20,
+        perc_obs=0.03,
+        seed=42,
+        adjust_means=False,
+        max_depth=3,
+        use_R_version=False,
+    ):
         self.seed = seed
         self.variant = variant
         self.adjust_means = adjust_means
@@ -35,7 +46,7 @@ class Discretizer:
             self.gmms = self._train_bgmms(X_num_trn, k_max=k_max)
             groups = self._get_gmm_groups(X_num_trn)
         elif self.variant == "dt":
-            self.disttree = DistTree(max_depth, seed=seed)
+            self.disttree = DistTree(max_depth, seed=seed) if use_R_version else DistTreePy(max_depth)
             self.disttree.fit(X_num_trn)
             groups = self.disttree.get_groups(X_num_trn)
 

@@ -27,6 +27,7 @@ class TabCascade:
             seed=self.seed,
             k_max=self.config.data.k_max,
             max_depth=self.config.data.max_depth,
+            use_R_version=False,
         )
         groups, mask, infl_groups, has_miss = self.z_encoder.encode(x_num)
 
