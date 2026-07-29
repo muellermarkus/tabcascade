@@ -299,10 +299,8 @@ class TabCascade:
                 pbar.set_postfix(
                     {"loss (lowres)": f"{lowres_loss_trn:.4f}", "loss (highres)": f"{highres_loss_trn:.4f}"},
                 )
-                lowres_loss_trn = 0
-                highres_loss_trn = 0
-                n_inputs = 0
                 scheduler_highres.step(highres_loss_trn)
+                lowres_loss_trn = highres_loss_trn = n_inputs = 0
             step += 1
             pbar.update(1)
         pbar.close()

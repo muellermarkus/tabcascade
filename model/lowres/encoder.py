@@ -5,7 +5,6 @@ from sklearn.mixture import BayesianGaussianMixture
 from sklearn.preprocessing import OrdinalEncoder
 
 from disttree_python import DistTree as DistTreePy
-from disttree_R import DistTree
 
 
 class Discretizer:
@@ -41,6 +40,9 @@ class Discretizer:
 
         # get means of non-missing values to infer mean for missing group (after mean imputation)
         miss_mean = torch.nanmean(X_num_trn, dim=0)
+
+        if use_R_version:
+            from disttree_R import DistTree
 
         if self.variant == "gmm":
             self.gmms = self._train_bgmms(X_num_trn, k_max=k_max)
