@@ -2,11 +2,11 @@ model_name: 'tabcascade'
 
 data:
   cat_encoding:
-  encoder: 'dt'  # dt / gmm
+  encoder: 'gmm'  # dt / gmm
   max_depth: 8
-  k_max: 10
+  k_max: 30
   batch_size: 4096
-  adjust_means: False
+  adjust_means: True
 
 highres:
   model:

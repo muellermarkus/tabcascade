@@ -27,21 +27,10 @@ class TabCascade:
             seed=self.seed,
             k_max=self.config.data.k_max,
             max_depth=self.config.data.max_depth,
+            adjust_means=self.config.data.adjust_means,
             use_R_version=False,
         )
         groups, mask, infl_groups, has_miss = self.z_encoder.encode(x_num)
-
-        if self.config.data.encoder == "gmm":
-            # adjust means and remove those not appearing in the data (after hard clustering)
-            for i in range(groups.shape[1]):
-                vals = groups[:, i].unique()
-                self.z_encoder.means[i] = self.z_encoder.means[i][vals]
-
-            # train additional ordinal encoder for groups
-            # as some components may never be the argmax and thus not appear in the data
-            self.gmm_ord_enc = OrdinalEncoder()
-            groups = self.gmm_ord_enc.fit_transform(groups.numpy())
-            groups = torch.from_numpy(groups).long()
 
         # provide easy access to group-specific means and standard deviations
         self.z_means = self.z_encoder.means
@@ -325,9 +314,6 @@ class TabCascade:
         }
         torch.save(state, save_dir / "model.pt")
 
-        if self.config.data.encoder == "gmm":
-            torch.save(self.gmm_ord_enc, save_dir / "gmm_ord_enc.pt")
-
     def load_model(self, save_dir: Path):
 
         state = torch.load(save_dir / "model.pt", weights_only=False)
@@ -371,12 +357,7 @@ class TabCascade:
 
         # overwrite inflated / missing values in X_num using Z_num
         assert x_num_gen.shape == z_num_gen.shape
-        if self.config.data.encoder == "gmm":
-            z_num_gen_enc = self.gmm_ord_enc.inverse_transform(z_num_gen)
-            z_num_gen_enc = torch.from_numpy(z_num_gen_enc).long()
-        else:
-            z_num_gen_enc = z_num_gen
-        infl_mask, miss_mask = self.get_masks(z_num_gen_enc)
+        infl_mask, miss_mask = self.get_masks(z_num_gen)
 
         # get groups means (= inflated value if var = 0)
         z_num_gen_means = (

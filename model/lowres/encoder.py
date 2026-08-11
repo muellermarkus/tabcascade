@@ -45,28 +45,36 @@ class Discretizer:
             from disttree_R import DistTree
 
         if self.variant == "gmm":
-            self.gmms = self._train_bgmms(X_num_trn, k_max=k_max)
+            self.gmms = self._train_bgmms(X_num_trn, k_max=self.k_max)
             groups = self._get_gmm_groups(X_num_trn)
         elif self.variant == "dt":
             self.disttree = DistTree(max_depth, seed=seed) if use_R_version else DistTreePy(max_depth)
             self.disttree.fit(X_num_trn)
             groups = self.disttree.get_groups(X_num_trn)
 
-        # get group-specific means and stds
-        if self.adjust_means:
+        if self.variant == "gmm":
             means = []
             stds = []
             for i in range(X_num_trn.shape[1]):
+                # adjust means according to group IDs (which are ordinal encoded)
+                raw_means = torch.tensor(self.gmms[i].means_.squeeze(), dtype=torch.float32)
+                raw_stds = torch.tensor(np.sqrt(self.gmms[i].covariances_.squeeze()), dtype=torch.float32)
+
                 df = pd.DataFrame({"x": X_num_trn[:, i].clone(), "group": groups[:, i]})
-                df_stats = df.groupby("group").agg(["mean", "std"]).droplevel(0, axis=1)
-                means.append(torch.tensor(df_stats["mean"].to_numpy(), dtype=torch.float32))
-                stds.append(torch.tensor(df_stats["std"].to_numpy(), dtype=torch.float32))
-        elif self.variant == "gmm":
-            means = []
-            stds = []
-            for i in range(X_num_trn.shape[1]):
-                means.append(torch.tensor(self.gmms[i].means_.squeeze(), dtype=torch.float32))
-                stds.append(torch.tensor(np.sqrt(self.gmms[i].covariances_.squeeze()), dtype=torch.float32))
+                df_stats = df.groupby("group").agg(["mean", "std", "count"]).droplevel(0, axis=1)
+                if self.adjust_means:
+                    # adjust means to empirical means and stds (groupby discard NaNs automatically)
+                    for group_id, row in df_stats.iterrows():
+                        raw_means[int(group_id)] = row["mean"]
+                        # avoid NaN empirical std for singleton groups
+                        if row["count"] > 1 and np.isfinite(row["std"]):
+                            raw_stds[int(group_id)] = row["std"]
+
+                cats = torch.as_tensor(self.gmm_ord_enc.categories_[i])
+                cats = cats[~torch.isnan(cats)].long()  # remove NaN (missing group)
+                means.append(raw_means[cats])
+                stds.append(raw_stds[cats])
+
         elif self.variant == "dt":
             means = [torch.tensor(m, dtype=torch.float32) for m in self.disttree.means]
             stds = [torch.tensor(s, dtype=torch.float32) for s in self.disttree.stds]
@@ -77,11 +85,12 @@ class Discretizer:
         for i in range(X_num_trn.shape[1]):
             df = pd.DataFrame({"x": X_num_trn[:, i].clone(), "group": groups[:, i]})
             df_stats = df.groupby("group").agg(["mean", "std"]).droplevel(0, axis=1)
-            infl_idx = df_stats.loc[df_stats["std"] == 0].index.to_list()
+            infl_idx = df_stats.index[df_stats["std"] == 0].astype(int).to_list()
             self.has_inflated.append(len(infl_idx) > 0)
             self.infl_groups.append(infl_idx)
 
-            # adjust std to zero
+            # adjust std to zero and mean to empirical mean
+            means[i][infl_idx] = torch.tensor(df_stats.loc[infl_idx, "mean"].to_numpy(), dtype=torch.float32)
             stds[i][infl_idx] = 0
 
         # adjust means for missings (assign mean, std of group to which average X belongs)
